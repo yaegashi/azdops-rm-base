@@ -22,15 +22,6 @@
     },
     "dbAdminPass": {
       "value": "${DB_ADMIN_PASS=$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} DB-ADMIN-PASS)}"
-    },
-    "msTenantId": {
-      "value": "${MS_TENANT_ID}"
-    },
-    "msClientId": {
-      "value": "${MS_CLIENT_ID}"
-    },
-    "msClientSecret": {
-      "value": "${MS_CLIENT_SECRET=$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} MS-CLIENT-SECRET)}"
     }
   }
 }

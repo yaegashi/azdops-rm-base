@@ -18,11 +18,6 @@ param dbAdminUser string = 'adminuser'
 @secure()
 param dbAdminPass string
 
-param msTenantId string = ''
-param msClientId string = ''
-@secure()
-param msClientSecret string = ''
-
 param resourceGroupName string = ''
 
 param keyVaultName string = ''
@@ -67,6 +62,17 @@ module keyVault './core/security/keyvault.bicep' = {
 
 var dbtags = 'mysql' == dbType ? mysql.outputs.tags : psql.outputs.tags
 
+module keyVaultSecretDbAdminUser './core/security/keyvault-secret.bicep' = {
+  name: 'keyVaultSecretDbAdminUser'
+  scope: rg
+  params: {
+    name: 'DB-ADMIN-USER'
+    tags: tags
+    keyVaultName: keyVault.outputs.name
+    secretValue: dbAdminUser
+  }
+}
+
 module keyVaultSecretDbAdminPass './core/security/keyvault-secret.bicep' = {
   name: 'keyVaultSecretDbAdminPass'
   scope: rg
@@ -75,17 +81,6 @@ module keyVaultSecretDbAdminPass './core/security/keyvault-secret.bicep' = {
     tags: tags
     keyVaultName: keyVault.outputs.name
     secretValue: dbAdminPass
-  }
-}
-
-module keyVaultSecretMsClientSecret './core/security/keyvault-secret.bicep' = {
-  name: 'keyVaultSecretMsClientSecret'
-  scope: rg
-  params: {
-    name: 'MS-CLIENT-SECRET'
-    tags: tags
-    keyVaultName: keyVault.outputs.name
-    secretValue: msClientSecret
   }
 }
 
@@ -99,8 +94,17 @@ module storageAccount './core/storage/storage-account.bicep' = {
   }
 }
 
-module secrets './app/secrets.bicep' = {
-  name: 'secrets'
+module storageAccess './app/storage-access.bicep' = {
+  name: 'storageAccess'
+  scope: rg
+  params: {
+    storageAccountName: storageAccount.outputs.name
+    principalId: principalId
+  }
+}
+
+module storageSecrets './app/storage-secrets.bicep' = {
+  name: 'secretsSecrets'
   scope: rg
   params: {
     location: location
@@ -165,8 +169,6 @@ module rgtags './app/tags.bicep' = {
     location: rg.location
     tags: union(rg.tags, dbtags,
       {
-        MS_TENANT_ID: msTenantId
-        MS_CLIENT_ID: msClientId
         KEY_VAULT_NAME: keyVault.outputs.name
         KEY_VAULT_ENDPOINT: keyVault.outputs.endpoint
         CONTAINER_REGISTRY_NAME: containerRegistry.outputs.name

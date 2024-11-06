@@ -2,7 +2,7 @@ param dbName string
 param dbAdminUser string = 'adminuser'
 @secure()
 param dbAdminPass string
-param dbSkuName string = 'Standard_B1s'
+param dbSkuName string = 'Standard_B1ms'
 param dbSkuTier string = 'Burstable'
 param dbSizeGB int = 32
 param dbVersion string = '8.0.21'
