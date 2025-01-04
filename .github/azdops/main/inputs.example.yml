@@ -1,0 +1,7 @@
+AZURE_TENANT_ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+AZURE_CLIENT_ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+AZURE_SUBSCRIPTION_ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+AZURE_LOCATION: japaneast
+AZURE_PRINCIPAL_ID: ''
+AZURE_RESOURCE_GROUP_NAME: ''
+DB_TYPE: mysql
