@@ -39,7 +39,7 @@ var tags = {
 }
 
 #disable-next-line no-unused-vars
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location, resourceGroupName))
+var resourceToken = toLower(uniqueString(subscription().id, environmentName, location, rg.name))
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
