@@ -1,4 +1,4 @@
-name: AZD Ops Setup
+name: AZD Ops Provision
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ env:
   AZD_INPUTS_FILE: .github/azdops/${{ github.ref_name }}/inputs.yml
 
 jobs:
-  azdops-setup:
+  azdops-provision:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
