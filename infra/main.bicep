@@ -9,7 +9,7 @@ param location string
 
 param principalId string
 
-@allowed([ 'mysql', 'psql' ])
+@allowed(['mysql', 'psql'])
 param dbType string = 'mysql'
 param dbName string = ''
 param dbAdminUser string = 'adminuser'
@@ -55,6 +55,16 @@ module keyVault './core/security/keyvault.bicep' = {
     location: location
     tags: tags
     principalId: principalId
+  }
+}
+
+module keyVaultAccessDeployment './core/security/keyvault-access.bicep' = {
+  name: 'keyVaultAccessDeployment'
+  scope: rg
+  params: {
+    keyVaultName: keyVault.outputs.name
+    principalId: principalId
+    permissions: { secrets: ['list', 'get', 'set'] }
   }
 }
 
@@ -154,9 +164,15 @@ module monitoring './core/monitor/monitoring.bicep' = {
   params: {
     location: location
     tags: tags
-    logAnalyticsName: !empty(logAnalyticsName) ? logAnalyticsName : '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
-    applicationInsightsName: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${resourceToken}'
-    applicationInsightsDashboardName: !empty(applicationInsightsDashboardName) ? applicationInsightsDashboardName : '${abbrs.portalDashboards}${resourceToken}'
+    logAnalyticsName: !empty(logAnalyticsName)
+      ? logAnalyticsName
+      : '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
+    applicationInsightsName: !empty(applicationInsightsName)
+      ? applicationInsightsName
+      : '${abbrs.insightsComponents}${resourceToken}'
+    applicationInsightsDashboardName: !empty(applicationInsightsDashboardName)
+      ? applicationInsightsDashboardName
+      : '${abbrs.portalDashboards}${resourceToken}'
   }
 }
 
@@ -165,15 +181,13 @@ module rgtags './app/tags.bicep' = {
   params: {
     name: rg.name
     location: rg.location
-    tags: union(rg.tags, dbtags,
-      {
-        KEY_VAULT_NAME: keyVault.outputs.name
-        KEY_VAULT_ENDPOINT: keyVault.outputs.endpoint
-        CONTAINER_REGISTRY_NAME: containerRegistry.outputs.name
-        CONTAINER_REGISTRY_ENDPOINT: containerRegistry.outputs.loginServer
-        STORAGE_ACCOUNT_NAME: storageAccount.outputs.name
-      }
-    )
+    tags: union(rg.tags, dbtags, {
+      KEY_VAULT_NAME: keyVault.outputs.name
+      KEY_VAULT_ENDPOINT: keyVault.outputs.endpoint
+      CONTAINER_REGISTRY_NAME: containerRegistry.outputs.name
+      CONTAINER_REGISTRY_ENDPOINT: containerRegistry.outputs.loginServer
+      STORAGE_ACCOUNT_NAME: storageAccount.outputs.name
+    })
   }
 }
 
