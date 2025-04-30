@@ -25,6 +25,12 @@
     },
     "dbAdminPass": {
       "value": "${DB_ADMIN_PASS=$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} DB-ADMIN-PASS)}"
+    },
+    "githubRepositoryUrl": {
+      "value": "${GITHUB_REPOSITORY_URL}"
+    },
+    "githubActionsRunUrl": {
+      "value": "${GITHUB_ACTIONS_RUN_URL}"
     }
-  }
+}
 }

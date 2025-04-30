@@ -59,6 +59,8 @@ jobs:
           fi
           azd env set AZURE_RESOURCE_GROUP_NAME $AZURE_RESOURCE_GROUP_NAME
           azd env set DB_TYPE $DB_TYPE
+          azd env set GITHUB_REPOSITORY_URL "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          azd env set GITHUB_ACTIONS_RUN_URL "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           azd provision --no-prompt
       - name: AZD Remote Environment
         shell: bash
